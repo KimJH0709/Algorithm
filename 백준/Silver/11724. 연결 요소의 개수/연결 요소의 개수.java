@@ -1,4 +1,7 @@
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Main {
     static int N, M;
@@ -24,7 +27,7 @@ public class Main {
 
         for (int i = 1; i <= N; i++) {
             if (!visited[i]) {
-                dfs(i);
+                bfs(i);
                 cnt++;
             }
         }
@@ -32,12 +35,44 @@ public class Main {
         System.out.println(cnt);
     }
 
+    static void bfs(int node) {
+        Queue<Integer> q = new LinkedList<>();
+        q.add(node);
+        visited[node] = true;
+
+        while(!q.isEmpty()) {
+            int now = q.poll();
+            for (int i = 1; i <= N; i++) {
+                if(graph[now][i] == 1 && !visited[i]) {
+                    q.add(i);
+                    visited[i] = true;
+                }
+            }
+        }
+    }
+
     static void dfs(int node) {
+        Stack<Integer> s = new Stack<>();
+        s.push(node);
+        visited[node] = true;
+
+        while(!s.isEmpty()) {
+            int now = s.pop();
+            for (int i = 1; i <= N; i++) {
+                if (graph[now][i] == 1 && !visited[i]) {
+                    s.push(i);
+                    visited[i] = true;
+                }
+            }
+        }
+    }
+
+    /*static void dfs(int node) {
         visited[node] = true;
         for (int i = 1; i <= N; i++) {
             if (graph[node][i] == 1 && !visited[i]) {
                 dfs(i);
             }
         }
-    }
+    }*/
 }
