@@ -8,7 +8,7 @@ public class Main {
         int[] dr = {0, 1, 0, -1};
         int[] dc = {-1, 0, 1, 0};
         Queue<Point> q = new LinkedList<>();
-        TreeSet<Integer> set = new TreeSet<>();
+        List<Integer> list = new ArrayList<>();
 
         int max = 0;
         for (int i = 0; i < n; i++) {
@@ -44,9 +44,9 @@ public class Main {
                     }
                 }
             }
-            set.add(cnt);
+            list.add(cnt);
         }
-        System.out.println(set.pollLast());
+        System.out.println(Collections.max(list));
     }
 }
 
