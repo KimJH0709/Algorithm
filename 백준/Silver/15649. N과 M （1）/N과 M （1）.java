@@ -6,22 +6,22 @@ class Main {
     private static boolean[] visit;
     private static int[] arr;
     private static StringBuilder sb = new StringBuilder();
-
+    private static int N, M;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
         visit = new boolean[N];
         arr = new int[M];
 
-        dfs(N, M, 0);
+        dfs(0);
         System.out.println(sb);
     }
 
-    private static void dfs(int n, int m, int depth) {
+    private static void dfs(int depth) {
 
-        if (depth == m) {
+        if (depth == M) {
             for (int val : arr) {
                 sb.append(val).append(' ');
             }
@@ -29,15 +29,16 @@ class Main {
             return;
         }
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < N; i++) {
             if (!visit[i]) {
                 visit[i] = true;
                 arr[depth] = i + 1;
-                dfs(n, m, depth + 1);
-                
+                dfs(depth + 1);
+
                 visit[i] = false;
             }
 
         }
     }
 }
+
