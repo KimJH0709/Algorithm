@@ -1,45 +1,48 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
 
-public class Main {
+class Main {
+    static int n;
+    static BufferedReader br;
+    static StringBuilder sb;
+    static StringTokenizer st;
+    static Deque<int[]> d;
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
 
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        br = new BufferedReader(new InputStreamReader(System.in));
+        sb = new StringBuilder();
+        d = new ArrayDeque<>();
 
-        StringBuilder sb = new StringBuilder();
+        n = Integer.parseInt(br.readLine());
+        st = new StringTokenizer(br.readLine());
 
-        Deque<int[]> deque = new LinkedList<>();
-        for (int i = 1; i <= N; i++) {
-            deque.add(new int[]{i, Integer.parseInt(st.nextToken())});
+        for (int i = 0; i < n; i++) {
+            d.add(new int[]{i + 1, Integer.parseInt(st.nextToken())});
         }
 
-        while (!deque.isEmpty()) {
+        while (!d.isEmpty()) {
+            int[] cur = d.pollFirst();
+            sb.append(cur[0]).append(" ");
 
-            int[] target = deque.pollFirst();
-            sb.append(target[0]).append(" ");
+            if(d.isEmpty()) break;
 
-            if (deque.isEmpty()) {
-                break;
-            }
-
-            int steps = target[1];
-            if (steps > 0) {
-                steps = (steps - 1) % deque.size();
-                for (int i = 0; i < steps; i++) {
-                    deque.addLast(deque.pollFirst());
+            if (cur[1] > 0) {
+                for (int i = 0; i < cur[1] - 1; i++) {
+                    d.addLast(d.pollFirst());
                 }
             } else {
-                steps = (-steps) % deque.size();
-                for (int i = 0; i < steps; i++) {
-                    deque.addFirst(deque.pollLast());
+                for (int i = 0; i < -cur[1]; i++) {
+                    d.addFirst(d.pollLast());
                 }
             }
-
         }
 
-        System.out.println(sb.toString());
+        System.out.println(sb);
+        br.close();
+
     }
 }
