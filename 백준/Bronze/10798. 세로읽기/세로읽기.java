@@ -1,34 +1,32 @@
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class Main {
+class Main {
+    static BufferedReader br;
+    static StringBuilder sb;
+    static String[] words;
+    static int max = Integer.MIN_VALUE;
 
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
+        br = new BufferedReader(new InputStreamReader(System.in));
+        sb = new StringBuilder();
+        words = new String[5];
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		String[] str = new String[5];
-		for(int i = 0; i < 5; i++) {
-			str[i] = br.readLine();
-		}
-		
-		StringBuilder sb = new StringBuilder();
-		
-		for(int i = 0; i < 15; i++) {
-			for(int j = 0; j < 5; j++) {
-				if(str[j].length() > i) {
-					sb.append(str[j].charAt(i));
-				} else {
-					continue;
-				}
-			}
-		}
-		
-		System.out.println(sb);
-		
-		br.close();
+        for (int i = 0; i < 5; i++) {
+            words[i] = br.readLine();
+            if(words[i].length() > max) max = words[i].length();
+        }
 
-	}
+        for (int i = 0; i < max; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (words[j].length() > i) {
+                    sb.append(words[j].charAt(i));
+                }
+            }
+        }
 
+        System.out.println(sb);
+        
+
+    }
 }
