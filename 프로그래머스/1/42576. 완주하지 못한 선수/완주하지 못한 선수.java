@@ -3,7 +3,7 @@ import java.util.*;
 class Solution {
     public String solution(String[] participant, String[] completion) {
         
-        StringBuilder sb = new StringBuilder();
+        String answer = "";
         
         HashMap<String, Integer> map = new HashMap<>();
         
@@ -17,11 +17,11 @@ class Solution {
         
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             if (entry.getValue() != 0) {
-                sb.append(entry.getKey());
+                answer = entry.getKey();
             }    
         }
         
-        return sb.toString();
+        return answer;
         
     }
 }
