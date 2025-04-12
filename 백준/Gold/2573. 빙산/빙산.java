@@ -1,90 +1,123 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 class Main {
+	static int N, M;
+	static int[][] map;
+	static boolean[][] visited;
+	static int[] dr = { -1, 1, 0, 0 };
+	static int[] dc = { 0, 0, -1, 1 };
 
-    static int n, m;
-    static int[][] earth;
-    static boolean[][] visited;
-    static int[] dr = {-1, 1, 0, 0};
-    static int[] dc = {0, 0, -1, 1};
-    static List<Ice> iceList;
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
 
-        earth = new int[n][m];
-        visited = new boolean[n][m];
-        iceList = new ArrayList<>();
+		map = new int[N + 1][M + 1];
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                earth[i][j] = sc.nextInt();
-                if (earth[i][j] > 0) {
-                    iceList.add(new Ice(i, j, earth[i][j]));
-                }
-                visited[i][j] = true;
-            }
-        }
+		Queue<Point> q = new LinkedList<>();
 
-        // 시간이 흐를 때 마다 빙산 녹이기
-        for (int year = 1; !iceList.isEmpty(); year++) {
-            for (Ice ice : iceList) {
-                for (int j = 0; j < 4; j++) {
-                    int nr = ice.row + dr[j];
-                    int nc = ice.col + dc[j];
-                    // 테두리는 무조건 바다로 주어짐
-                    if (earth[nr][nc] == 0) {
-                        ice.height--;
-                    }
-                }
-            }
+		for (int n = 1; n <= N; n++) {
+			st = new StringTokenizer(br.readLine());
+			for (int m = 1; m <= M; m++) {
+				map[n][m] = Integer.parseInt(st.nextToken());
+			}
+		}
 
-            for (int i = 0; i < iceList.size(); i++) {
-                Ice ice = iceList.get(i);
-                if (ice.height <= 0) {
-                    earth[ice.row][ice.col] = 0;
-                    iceList.set(i, iceList.get(iceList.size() - 1));
-                    iceList.remove(iceList.size() - 1);
-                    i--;
-                } else {
-                    visited[ice.row][ice.col] = false;
-                }
-            }
-            if (iceList.size() > 0 && dfs(iceList.get(0).row, iceList.get(0).col) != iceList.size()) {
-                System.out.println(year);
-                return;
-            }
-        }
-        System.out.println(0);
+		int year = 0;
+		while (true) {
+			visited = new boolean[N + 1][M + 1];
+			int count = 0;
 
+			for (int i = 1; i <= N; i++) {
+				for (int j = 1; j <= M; j++) {
+					if (map[i][j] > 0 && !visited[i][j]) {
+						bfs(i, j);
+						count++;
+					}
+				}
+			}
 
-    }
+			if (count == 0) {
+				System.out.println(0);
+				break;
+			}
 
-    static int dfs(int r, int c) {
-        visited[r][c] = true;
-        int cnt = 1;
-        for (int i = 0; i < 4; i++) {
-            int nr = r + dr[i];
-            int nc = c + dc[i];
-            if (visited[nr][nc]) continue;
-            cnt += dfs(nr, nc);
-        }
-        return cnt;
-    }
+			if (count >= 2) {
+				System.out.println(year);
+				break;
+			}
+
+			melt();
+			year++;
+		}
+
+	}
+
+	static void bfs(int r, int c) {
+		Queue<Point> q = new LinkedList<>();
+		q.add(new Point(r, c));
+		visited[r][c] = true;
+
+		while (!q.isEmpty()) {
+			Point now = q.poll();
+
+			for (int i = 0; i < 4; i++) {
+				int nr = now.r + dr[i];
+				int nc = now.c + dc[i];
+
+				if (nr >= 1 && nc >= 1 && nr <= N && nc <= M) {
+					if (!visited[nr][nc] && map[nr][nc] > 0) {
+						visited[nr][nc] = true;
+						q.add(new Point(nr, nc));
+					}
+				}
+			}
+		}
+
+	}
+
+	static void melt() {
+		int[][] temp = new int[N + 1][M + 1];
+
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= M; j++) {
+				if (map[i][j] > 0) {
+					int water = 0;
+
+					for (int d = 0; d < 4; d++) {
+						int nr = i + dr[d];
+						int nc = j + dc[d];
+
+						if (nr >= 1 && nc >= 1 && nr <= N && nc <= M) {
+							if (map[nr][nc] == 0) {
+								water++;
+							}
+						}
+					}
+
+					temp[i][j] = Math.max(map[i][j] - water, 0);
+				}
+			}
+		}
+		for(int i = 1; i<= N; i++) {
+			for (int j = 1; j <= M; j++) {
+				map[i][j] = temp[i][j];
+			}
+		}
+	}
 }
 
-class Ice {
-    int row;
-    int col;
-    int height;
+class Point {
+	int r, c;
 
-    public Ice(int r, int c, int h) {
-        row = r;
-        col = c;
-        height = h;
-    }
+	Point(int r, int c) {
+		this.r = r;
+		this.c = c;
+	}
 }
