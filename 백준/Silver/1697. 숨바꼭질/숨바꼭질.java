@@ -1,40 +1,43 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
-public class Main {
-    static int n, k;
-    static int[] visited;
+class Main {
+	static int N, K;
+	static int[] visited;
 
-    public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(st.nextToken());
 
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        k = sc.nextInt();
-        visited = new int[100001];
+		visited = new int[100001];
 
-        Queue<Integer> q = new LinkedList<>();
-        q.add(n);
-        visited[n] = 1;
-        while (!q.isEmpty()) {
-            int now = q.poll();
-            if (now == k) break;
-            int[] next = {now - 1, now + 1, 2 * now};
-            for (int i = 0; i < 3; i++) {
-                if (!isRange(next[i])) continue;
-                if (visited[next[i]] == 0) {
-                    visited[next[i]] = visited[now] + 1;
-                    q.add(next[i]);
-                }
-            }
-        }
+		Queue<Integer> q = new LinkedList<>();
+		q.add(N);
+		visited[N] = 1;
 
-        System.out.println(visited[k] - 1);
+		while (!q.isEmpty()) {
+			int now = q.poll();
+
+			if (now == K) {
+				System.out.println(visited[now] - 1);
+				return;
+			}
+			
+			int[] nextStep = { now + 1, now - 1, now * 2 };
+
+			for (int next : nextStep) {
+				if (next >= 0 && next <= 100000 && visited[next] == 0) {
+					q.add(next);
+					visited[next] = visited[now] + 1;
+				}
+			}
+		}
 
 
-    }
-
-    static boolean isRange(int x) {
-        return x >= 0 && x <= 100000;
-    }
+	}
 }
