@@ -1,60 +1,85 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int[][] map = new int[n][n];
-        int[] dr = {0, 1, 0, -1};
-        int[] dc = {-1, 0, 1, 0};
-        Queue<Point> q = new LinkedList<>();
-        List<Integer> list = new ArrayList<>();
+class Main {
+	static int[][] map;
+	static int max = Integer.MIN_VALUE;
+	static int[] dr = {-1, 1, 0, 0};
+	static int[] dc = {0, 0, -1, 1};
+	static boolean[][] visited;
+	static int N;
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
+		map = new int[N + 1][N + 1];
+		visited = new boolean[N + 1][N + 1];
+		
+		for (int i = 1; i <= N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for (int j = 1; j <= N; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+				if (map[i][j] > max) max = map[i][j];
+			}
+		}
+		
+		int result = 1;
+		
+		for (int h = 1; h < max; h++) {
+			visited = new boolean[N + 1][N + 1];
+			int safeArea = 0;
+			
+			for (int i = 1; i <= N; i++) {
+				for (int j = 1; j <= N; j++) {
+					
+					if (!visited[i][j] && map[i][j] > h) {
+						bfs(i, j, h);
+						safeArea++;
+					}
+					
+					
+				}
+			}
+			result = Math.max(result, safeArea);
 
-        int max = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                map[i][j] = sc.nextInt();
-                if (max < map[i][j]) max = map[i][j];
-            }
-        }
+		}
+		
+		System.out.println(result);
+		
+	}
 
-        for (int rain = 0; rain <= max; rain++) {
-            boolean[][] visited = new boolean[n][n];
-            int cnt = 0;
-            for (int i = 0; i < n; i++) {
-                for(int j = 0; j < n; j++) {
-                    if(map[i][j] > rain && !visited[i][j]) {
-                        q.add(new Point(i, j));
-                        visited[i][j] = true;
-                        while(!q.isEmpty()) {
-                            Point now = q.poll();
-                            for (int k = 0; k < 4; k++) {
-                                int nr = now.r + dr[k];
-                                int nc = now.c + dc[k];
 
-                                if (nr < 0 || nc < 0 || nr >= n || nc >= n) continue;
-
-                                if (map[nr][nc] > rain && !visited[nr][nc]) {
-                                    q.add(new Point(nr, nc));
-                                    visited[nr][nc] = true;
-                                }
-                            }
-                        }
-                        cnt++;
-                    }
-                }
-            }
-            list.add(cnt);
-        }
-        System.out.println(Collections.max(list));
-    }
+	static void bfs(int r, int c, int height) {
+		Queue<Point> q = new LinkedList<>();
+		q.add(new Point(r, c));
+		visited[r][c] = true;
+		
+		while(!q.isEmpty()) {
+			Point now = q.poll();
+			
+			for (int i = 0; i < 4; i++) {
+				int nr = now.r + dr[i];
+				int nc = now.c + dc[i];
+				
+				if (nr >= 1 && nc >= 1 && nr <= N && nc <= N) {
+					if (!visited[nr][nc] && map[nr][nc] > height) {
+						visited[nr][nc] = true;
+						q.add(new Point(nr, nc));
+					}
+				}
+			}
+		}
+ 		
+	}
 }
 
 class Point {
-    int r;
-    int c;
-    public Point(int r, int c) {
-        this.r = r;
-        this.c = c;
-    }
+	int r, c;
+	Point(int r, int c) {
+		this.r = r;
+		this.c = c;
+	}
 }
