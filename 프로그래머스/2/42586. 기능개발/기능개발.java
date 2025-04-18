@@ -4,37 +4,33 @@ class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
         
         int len = progresses.length;
-        Queue<Integer> q = new LinkedList<>();
         
+        Queue<Integer> q = new ArrayDeque<>();
         for (int i = 0; i < len; i++) {
-            int x = (100 - progresses[i]) / speeds[i];
-            q.add(((100 - progresses[i]) % speeds[i]) > 0 ? x + 1: x); 
+            int day = (int) Math.ceil((100 - progresses[i]) / (double) speeds[i]);
+            q.add(day);
         }
         
-        
+        List<Integer> list = new ArrayList<>();
         int now = q.poll();
         int count = 1;
-        List<Integer> result = new ArrayList<>();
-        
         while(!q.isEmpty()) {
-            int compare = q.peek();
-            if(now >= compare) {
-                q.poll();
+            int compare = q.poll();
+            if (now >= compare) {
                 count++;
             } else {
-                result.add(count);
-                now = q.poll();
+                list.add(count);
+                now = compare;
                 count = 1;
             }
         }
+        list.add(count);
         
-        result.add(count);
+        int[] answer = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            answer[i] = list.get(i);    
+        } 
 
-        int[] answer = new int[result.size()];
-        for (int i = 0; i < result.size(); i++) {
-            answer[i] = result.get(i);
-        }
-        
         return answer;
     }
 }
