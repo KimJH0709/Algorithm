@@ -1,41 +1,32 @@
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Stack;
 
 public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String str = br.readLine();
+        int answer = 0;
 
-	public static void main(String[] args) throws Exception {
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		String str = br.readLine();
-		
-		Stack<Character> stack = new Stack<Character>();
-		
-		int sum = 0;
-		char prev = ' ';
-		for (int i = 0; i < str.length(); i++) {
-			char c = str.charAt(i);
-			if (i > 0) {
-				prev = str.charAt(i - 1);
-			}
-			
-			if (c == '(') {
-				stack.push(c);
-			}
-			else {
-				stack.pop();
-				if (i > 0 && prev == '(') {
-					sum += stack.size();
-				} else if (i > 0 && prev == ')') {
-					sum += 1;
-				}
-			}
-		}
-		
-		System.out.println(sum);
+        Stack<Character> stack = new Stack<>();
 
-	}
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
 
+            if (ch == '(') {
+                stack.push(ch);
+            } else if (ch == ')') {
+                if (i != 0 && str.charAt(i - 1) == '(') {
+                    stack.pop();
+                    answer += stack.size();
+                } else {
+                    stack.pop();
+                    answer++;
+                }
+            }
+        }
+
+        System.out.println(answer);
+
+    }
 }
