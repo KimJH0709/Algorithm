@@ -1,33 +1,29 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-	public static void main(String[] args) throws Exception {
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int N = Integer.parseInt(br.readLine());
-		
-		StringBuilder sb = new StringBuilder();
-        
-		if (N == 0) {
-            System.out.println("0");
+        int n = Integer.parseInt(br.readLine());
+
+        if (n == 0) {
+            System.out.println(0);
             return;
         }
-        
-		while (N != 0) {
-			int remainder = N % -2;
-			N /= -2;
-			
-			if (remainder < 0) {
-				remainder += 2;
-				N += 1;
-			}
-			sb.append(remainder);
-		}
 
-		System.out.println(sb.reverse());
-	}
+        while (n != 0) {
+            int remainder = n % -2; // 나머지 계산
+            n /= -2;                // 몫 계산
 
+            if (remainder < 0) {    // 나머지가 음수일 경우
+                remainder += 2;     // 나머지를 양수로 변환
+                n += 1;             // 몫을 1 증가
+            }
+            sb.append(remainder);   // 나머지 결과에 추가
+        }
+
+        System.out.println(sb.reverse().toString());
+    }
 }
