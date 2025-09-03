@@ -1,51 +1,40 @@
-import java.util.*;
-
 class Solution {
+    int answer;
     public int solution(String begin, String target, String[] words) {
+        answer = 0;
         
-        Queue<String> q = new ArrayDeque<>();
-        int[] visited = new int[words.length];
-        int count = 0;
+        int n = words.length;
+        boolean[] visited = new boolean[n];
+        dfs(words, visited, begin, target, 0);
         
-        for (int i = 0; i < words.length; i++) {
-            if (isDiffOne(begin, words[i])) {
-                q.add(words[i]);
-                visited[i] = 1;
-            }
+        return answer;
+    }
+    
+    void dfs(String[] words, boolean[] visited, String now, String target, int depth) {
+        if (now.equals(target)) {
+            answer = depth;
+            return;
         }
         
-        while(!q.isEmpty()) {
-            String now = q.poll();
-            
-            int now_idx = -1;
-            for (int i = 0; i < words.length; i++) {
-                if (now == words[i])
-                    now_idx = i;
-            }
-            
-            if (now.equals(target)) {
-                return visited[now_idx];
-            }
-            
-            for (int i = 0; i < words.length; i++) {
-                if (isDiffOne(now, words[i]) && visited[i] == 0) {
-                    q.add(words[i]);
-                    visited[i] = visited[now_idx] + 1;
+        for (int i = 0; i < words.length; i++) {
+            if (!visited[i]) {
+                if (isDiffOne(now, words[i])) {
+                    visited[i] = true;
+                    dfs(words, visited, words[i], target, depth + 1);
+                    visited[i] = false;
                 }
             }
         }
-        
-        return 0;
     }
     
-    public boolean isDiffOne(String begin, String target) {
+    
+    boolean isDiffOne(String str1, String str2) {
         int count = 0;
-        
-        for (int i = 0; i < begin.length(); i++) {
-            if (begin.charAt(i) != target.charAt(i))
+        for (int i = 0; i < str1.length(); i++) {
+            if (str1.charAt(i) != str2.charAt(i))
                 count++;
         }
         
         return count == 1;
-    } 
+    }
 }
