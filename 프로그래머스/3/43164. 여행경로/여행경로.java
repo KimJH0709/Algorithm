@@ -1,40 +1,34 @@
 import java.util.*;
 
 class Solution {
-    
-    static Deque<String> dq = new ArrayDeque<>();
-    static boolean[] used;
-    
+    String[] answer;
     public String[] solution(String[][] tickets) {
+        boolean[] used = new boolean[tickets.length];
+        Arrays.sort(tickets, (t1, t2) -> t2[1].compareTo(t1[1]));
         
-        Arrays.sort(tickets, (a, b) -> a[1].compareTo(b[1]));
-        used = new boolean[tickets.length]; 
-        
-        dq.addLast("ICN");
-        dfs("ICN", tickets, 0);
-        
-        String[] answer = dq.toArray(new String[0]);
-        return answer;
+        StringBuilder sb = new StringBuilder("ICN");
+        dfs(tickets, used, "ICN", sb, 0);
+                
+        return  answer;
     }
     
-    static boolean dfs(String to, String[][] tickets, int count) {
+    void dfs(String[][] tickets, boolean[] used, String now, StringBuilder sb, int count) {       
         if (count == tickets.length) {
-            return true;
+            answer = sb.toString().split(",");
+            return;
         }
         
         for (int i = 0; i < tickets.length; i++) {
-            if (!used[i] && tickets[i][0].equals(to)) {
+            if (!used[i] && tickets[i][0].equals(now)) {
+                int prevLen = sb.length();
+                
                 used[i] = true;
-                dq.addLast(tickets[i][1]);
-                
-                if (dfs(tickets[i][1], tickets, count + 1)) {
-                    return true;
-                }
-                
+                sb.append(",").append(tickets[i][1]);
+                dfs(tickets, used, tickets[i][1], sb, count + 1);
+               
                 used[i] = false;
-                dq.pollLast();
+                sb.setLength(prevLen);
             }
         }
-        return false;
     }
 }
