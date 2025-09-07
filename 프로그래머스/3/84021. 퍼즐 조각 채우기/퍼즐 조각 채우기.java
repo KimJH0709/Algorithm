@@ -39,46 +39,29 @@ class Solution {
     }
     
     // ====== 회전 관련 ======
-
-    // 조각의 높이(H), 너비(W) 계산
-    int[] dims(List<Point> piece) {
-        int maxR = 0, maxC = 0;
-        for (Point p : piece) {
-            if (p.r > maxR) maxR = p.r;
-            if (p.c > maxC) maxC = p.c;
-        }
-        return new int[]{maxR + 1, maxC + 1}; // {H, W}
-    }
-
-    // 90도 회전: (r, c) -> (c, H-1-r)
+   // 90도 회전: (r, c) -> (c, -r)
     List<Point> rotate90(List<Point> piece) {
-        int[] d = dims(piece);
-        int H = d[0];
         List<Point> rot = new ArrayList<>(piece.size());
         for (Point p : piece) {
-            rot.add(new Point(p.c, H - 1 - p.r));
+            rot.add(new Point(p.c, -p.r));
         }
         return normalize(rot);
     }
 
-    // 180도 회전: (r, c) -> (H-1-r, W-1-c)
+    // 180도 회전: (r, c) -> (-r, -c)
     List<Point> rotate180(List<Point> piece) {
-        int[] d = dims(piece);
-        int H = d[0], W = d[1];
         List<Point> rot = new ArrayList<>(piece.size());
         for (Point p : piece) {
-            rot.add(new Point(H - 1 - p.r, W - 1 - p.c));
+            rot.add(new Point(-p.r, -p.c));
         }
         return normalize(rot);
     }
 
-    // 270도 회전: (r, c) -> (W-1-c, r)
+    // 270도 회전: (r, c) -> (-c, r)
     List<Point> rotate270(List<Point> piece) {
-        int[] d = dims(piece);
-        int W = d[1];
         List<Point> rot = new ArrayList<>(piece.size());
         for (Point p : piece) {
-            rot.add(new Point(W - 1 - p.c, p.r));
+            rot.add(new Point(-p.c, p.r));
         }
         return normalize(rot);
     }
