@@ -3,7 +3,7 @@ import java.util.*;
 class Solution {
     int[] dr = new int[]{1, 0, 0, -1};
     int[] dc = new int[]{0, -1, 1, 0};
-    String[] cmd = new String[]{"d", "l", "r", "u"};
+    char[] cmd = new char[]{'d', 'l', 'r', 'u'};
     boolean isFound = false;
     String answer;
     public String solution(int n, int m, int x, int y, int r, int c, int k) {
