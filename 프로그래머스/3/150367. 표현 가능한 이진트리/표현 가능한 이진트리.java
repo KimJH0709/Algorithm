@@ -17,7 +17,7 @@ class Solution {
     boolean isValid(long num) {
         String binary = Long.toBinaryString(num);
         int len = binary.length();
-        int fullSize = 1;
+
         int total = 1;
         while (total - 1 < len) total <<= 1;
         int totalLen = total - 1;
