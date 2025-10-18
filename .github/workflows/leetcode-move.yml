@@ -1,56 +1,62 @@
 name: Move LeetCode Solutions
 
 on:
-  workflow_dispatch:  # 수동 실행 옵션 유지
+  workflow_dispatch:
   push:
     paths:
-      - '[0-9][0-9][0-9][0-9]-*/**'  # LeetHub가 생성하는 폴더 패턴 (예: 0020-valid-parentheses)
+      - '[0-9][0-9][0-9][0-9]-*/**'
 
 jobs:
   move-files:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # 최근 커밋 기록을 가져오기 위해 설정
+          fetch-depth: 0
+          persist-credentials: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Align to latest origin/main (rebase)
+        run: |
+          git fetch origin main
+          git checkout -B main
+          git rebase origin/main
 
       - name: Move LeetCode solutions
         run: |
-          # 디버깅을 위한 현재 디렉토리 내용 출력
-          echo "Current directory contents:"
-          ls -la
-          
-          # LeetCode 폴더가 없다면 생성
+          set -e
+          shopt -s nullglob
           mkdir -p LeetCode
-          
-          # 변경된 파일 목록 확인
-          echo "Changed files in this push:"
-          git diff --name-only HEAD^ HEAD
-          
-          # LeetHub가 생성한 폴더들을 LeetCode 폴더로 이동
-          found=0
+          moved=0
           for d in [0-9][0-9][0-9][0-9]-*; do
             if [ -d "$d" ]; then
-              echo "Moving directory: $d"
-              mv "$d" "LeetCode/" && found=1
+              git mv "$d" "LeetCode/" || mv "$d" "LeetCode/"
+              moved=1
             fi
           done
-          
-          # 이동할 폴더를 찾지 못했을 경우에도 오류로 처리하지 않음
-          if [ $found -eq 0 ]; then
+          if [ $moved -eq 0 ]; then
             echo "No matching directories found to move"
           fi
 
-      - name: Commit & Push changes
+      - name: Commit changes (if any)
         run: |
-          # 변경사항이 있는지 확인
           if git status --porcelain | grep .; then
-            git config --global user.name 'github-actions[bot]'
-            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add -A
-            git commit -m "chore: Move LeetCode solutions to LeetCode folder"
-            git push
+            git commit -m "chore: Move LeetCode solutions to LeetCode folder" || exit 0
           else
             echo "No changes to commit"
           fi
+
+      - name: Rebase again on latest remote (guard)
+        run: |
+          git fetch origin main
+          git rebase origin/main || (echo "Rebase conflict. Abort."; git rebase --abort; exit 1)
+
+      - name: Push to main
+        run: |
+          git push origin HEAD:main
