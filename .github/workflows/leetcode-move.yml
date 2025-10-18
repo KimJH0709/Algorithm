@@ -19,20 +19,22 @@ jobs:
           persist-credentials: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Align to latest origin/main (rebase)
+      # 항상 원격 최신 위에서 작업 브랜치 시작
+      - name: Start from latest origin/main
         run: |
+          set -euo pipefail
           git fetch origin main
-          git checkout -B main
-          git rebase origin/main
+          git checkout -B chore/move-leetcode origin/main
 
       - name: Move LeetCode solutions
         run: |
-          set -e
+          set -euo pipefail
           shopt -s nullglob
           mkdir -p LeetCode
           moved=0
           for d in [0-9][0-9][0-9][0-9]-*; do
             if [ -d "$d" ]; then
+              # 히스토리 보존을 위해 git mv 우선, 실패 시 일반 mv
               git mv "$d" "LeetCode/" || mv "$d" "LeetCode/"
               moved=1
             fi
@@ -41,23 +43,33 @@ jobs:
             echo "No matching directories found to move"
           fi
 
-      - name: Commit changes (if any)
+      - name: Commit changes (reuse last message)
         run: |
+          set -euo pipefail
           if git status --porcelain | grep .; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add -A
-            last_msg=$(git log -1 --pretty=%B)
+            # 마지막 커밋 메시지(LeetHub 메시지) 재사용
+            last_msg="$(git log -1 --pretty=%B --no-show-signature)"
             git commit -m "$last_msg" || exit 0
           else
             echo "No changes to commit"
           fi
 
-      - name: Rebase again on latest remote (guard)
+      - name: Rebase & Push with retry
         run: |
-          git fetch origin main
-          git rebase origin/main || (echo "Rebase conflict. Abort."; git rebase --abort; exit 1)
-
-      - name: Push to main
-        run: |
-          git push origin HEAD:main
+          set -euo pipefail
+          for i in 1 2 3; do
+            git fetch origin main
+            # 작업 중 변경을 자동 스태시했다가 복원
+            git rebase --autostash origin/main || { git rebase --abort; exit 1; }
+            if git push origin HEAD:main; then
+              echo "Pushed on attempt $i"
+              exit 0
+            fi
+            echo "Push rejected (non-fast-forward). Retrying in 2s..."
+            sleep 2
+          done
+          echo "Failed to push after 3 attempts"
+          exit 1
