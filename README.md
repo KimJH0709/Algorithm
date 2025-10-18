@@ -23,4 +23,12 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0062-unique-paths](https://github.com/KimJH0709/Algorithm/tree/master/0062-unique-paths) |
+## String
+|  |
+| ------- |
+| [0020-valid-parentheses](https://github.com/KimJH0709/Algorithm/tree/master/0020-valid-parentheses) |
+## Stack
+|  |
+| ------- |
+| [0020-valid-parentheses](https://github.com/KimJH0709/Algorithm/tree/master/0020-valid-parentheses) |
 <!---LeetCode Topics End-->
