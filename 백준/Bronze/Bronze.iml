@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/10430. 나머지" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10798. 세로읽기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10808. 알파벳 개수" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10820. 문자열 분석" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10824. 네 수" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/11005. 진법 변환 2" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/11653. 소인수분해" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/11655. ROT13" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/1212. 8진수 2진수" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/1373. 2진수 8진수" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/1934. 최소공배수" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/22864. 피로도" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2609. 최대공약수와 최소공배수" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2743. 단어 길이 재기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2748. 피보나치 수 2" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2998. 8진수" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/5618. 공약수" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/9093. 단어 뒤집기" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
