@@ -1,38 +1,46 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.*;
+import java.io.*;
 
 public class Main {
+    static BufferedReader br;
+    static StringTokenizer st;
+    static StringBuilder sb;
+    static int t, k;
     public static void main(String[] args) throws Exception {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int test_case = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
+        br = new BufferedReader(new InputStreamReader(System.in));
+        sb = new StringBuilder();
+        t = Integer.parseInt(br.readLine());
 
-        for (int t = 0; t < test_case; t++) {
-            int Q = Integer.parseInt(br.readLine());
-
+        for (int tc = 0; tc < t; tc++) {
+            k = Integer.parseInt(br.readLine());
             TreeMap<Integer, Integer> map = new TreeMap<>();
 
-            for (int i = 0; i < Q; i++) {
-                StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int i = 0; i < k; i++) {
+                st = new StringTokenizer(br.readLine());
                 String cmd = st.nextToken();
                 int num = Integer.parseInt(st.nextToken());
 
                 if (cmd.equals("I")) {
                     map.put(num, map.getOrDefault(num, 0) + 1);
-                } else if (cmd.equals("D")) {
-                    if (!map.isEmpty()) {
-                        int x;
-                        if (num == 1) {
-                            x = map.lastKey();
+                } else {
+                    if (map.isEmpty()) continue;
+                    
+                    if (num == -1) {
+                        int key = map.firstKey();
+                        int cnt = map.get(key);
+                        if (cnt == 1) {
+                            map.remove(key);
                         } else {
-                            x = map.firstKey();
+                            map.put(key, cnt - 1);
                         }
-                        if (map.get(x) == 1) {
-                            map.remove(x);
+                    } else {
+                        int key = map.lastKey();
+                        int cnt = map.get(key);
+                        if (cnt == 1) {
+                            map.remove(key);
                         } else {
-                            map.put(x, map.get(x) - 1);
+                            map.put(key, cnt - 1);
                         }
                     }
                 }
@@ -43,9 +51,8 @@ public class Main {
             } else {
                 sb.append(map.lastKey()).append(" ").append(map.firstKey()).append("\n");
             }
-
         }
-        System.out.println(sb.toString());
 
+        System.out.println(sb.toString());
     }
 }
