@@ -1,32 +1,37 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
-class Main {
-    static List<Integer>[] graph;
-    static int[] color;
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+public class Main {
+    static BufferedReader br;
+    static StringTokenizer st;
+    static int k;
+    public static void main(String[] args) throws Exception {
 
-        int k = sc.nextInt();
-        for (int tc = 0; tc < k; tc++) {
-            int v = sc.nextInt();
-            int e = sc.nextInt();
-            
-            
-            graph = new List[v + 1];
-            color = new int[v + 1];
+        br = new BufferedReader(new InputStreamReader(System.in));
+        k = Integer.parseInt(br.readLine());
+
+        for (int t = 0; t < k; t++) {
+            st = new StringTokenizer(br.readLine());
+            int v = Integer.parseInt(st.nextToken());
+            int e = Integer.parseInt(st.nextToken());
+
+            @SuppressWarnings("unchecked")
+            List<Integer>[] graph = new ArrayList[v + 1];
+            int[] color = new int[v + 1];
             for (int i = 0; i <= v; i++) {
                 graph[i] = new ArrayList<>();
             }
+
             for (int i = 0; i < e; i++) {
-                int src = sc.nextInt();
-                int dist = sc.nextInt();
-                graph[src].add(dist);
-                graph[dist].add(src);
+                st = new StringTokenizer(br.readLine());
+                int src = Integer.parseInt(st.nextToken());
+                int dst = Integer.parseInt(st.nextToken());
+                graph[src].add(dst);
+                graph[dst].add(src);
             }
+
             for (int i = 1; i <= v; i++) {
-                dfs(i, 0);
+                dfs(graph, color, i, 0);
             }
 
             boolean isBinary = true;
@@ -44,13 +49,19 @@ class Main {
 
     static int RED = 1;
     static int BLUE = 2;
-    private static void dfs(int nodeNum, int depth) {
-        if (color[nodeNum] != 0) return;
-        if (depth % 2 == 0) color[nodeNum] = RED;
-        else color[nodeNum] = BLUE;
+
+    static void dfs(List<Integer>[] graph, int[] color, int nodeNum, int depth) {
+        if (color[nodeNum] != 0) {
+            return;
+        }
+        if (depth % 2 == 0) {
+            color[nodeNum] = RED;
+        } else {
+            color[nodeNum] = BLUE;
+        }
 
         for (int next : graph[nodeNum]) {
-            dfs(next, depth + 1);
+            dfs(graph, color, next, depth + 1);
         }
     }
 }
